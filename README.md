@@ -1,70 +1,117 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Document Card Viewer
 
-## Available Scripts
+This React application displays a list of document types as cards using data from a staticCards file. The app features drag-and-drop card reordering, loading spinners for images, and a full-screen image overlay when a card is clicked.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+1. **Cards**: The data for the cards is loaded from a staticCards.js file. Each card displays a document id, a title, and an image.
+   
+2. **Grid Layout**: The application arranges cards in a responsive grid format, ensuring that:
+   - A maximum of 3 cards per row is displayed.
+   - On medium screens (e.g., tablets), 2 cards per row are shown.
+   - On small screens (e.g., mobile devices), 1 card per row is shown.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. **Image Loading with Spinner**: While each image is loading, a spinner (loading indicator) is displayed in its place. Once the image loads, the spinner is replaced by the image.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+4. **Drag-and-Drop**: Users can reorder the cards by dragging and dropping them to new positions.
 
-### `npm test`
+5. **Image Overlay**: Clicking on a card opens a full-screen overlay displaying the card's image. The overlay can be closed by pressing the `ESC` key.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Thought Process
 
-### `npm run build`
+### 1. Rendering Cards from staticCards.js
+The application fetches a staticCards file containing information about different document types. Each item in the staticCards file has:
+- A `id`: a unique identifier for the document.
+- A `title`: the name to display on the card.
+- A `image`: the image to display on the card
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The staticCards is stored statically, but it could be replaced by an API or dynamic data source in the future.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2. Responsive Grid Layout
+The cards are displayed using CSS Grid. I ensured that:
+- The grid layout has a maximum of 3 cards per row (`grid-template-columns: repeat(3, 1fr);`).
+- Media queries allow for responsive adjustments on smaller screens:
+  - 2 cards per row on medium screens (tablets).
+  - 1 card per row on small screens (mobile).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This layout allows for smooth responsiveness across different device types and screen sizes.
 
-### `npm run eject`
+### 3. Loading Spinner
+To provide better user experience, a loading spinner is shown while the image for each card is being fetched. This spinner is centered inside the card, and it disappears once the image loads. Both the image and spinner occupy the same space, preventing any layout shifts.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 4. Drag-and-Drop Feature
+The `react-dnd` library is used to implement drag-and-drop functionality. This feature allows users to rearrange the cards, providing flexibility in the card order. The card positions are tracked and updated on drag events.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The drag-and-drop logic ensures that the layout is maintained during card movement, with smooth animations for user interaction.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 5. Image Overlay
+Clicking on a card displays the corresponding image in an overlay that takes up the entire screen. The overlay includes a backdrop that darkens the rest of the page to focus on the image. The user can close the overlay by either:
+- Pressing the `ESC` key.
+- Clicking outside the image area.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 6. Code Structure
+- `App.js`: Main component that renders the grid of cards and manages the drag-and-drop functionality.
+- `modules/DragDrop.js`: Module that renders the grid of cards and manages the drag-and-drop functionality
+- `Card/index.js`: Individual card component that renders the title, image (or spinner), and handles the overlay.
+- `ImageOverlay/index.js`: Handles the full-screen image display when a card is clicked.
+- `Loader/index.js`: Handles the loading of the image in the card
+- `data/staticCards.js`: Static file that stores the document information used to generate the cards.
 
-## Learn More
+## Installation and Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites:
+- [Node.js](https://nodejs.org/) installed on your machine.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Steps to run the project:
 
-### Code Splitting
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/document-card-viewer.git
+   cd document-card-viewer
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Analyzing the Bundle Size
+3. **Run the app**:
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. **Access the app**:
+   Open your browser and go to `http://localhost:3000` to view the app.
 
-### Making a Progressive Web App
+## File Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+src/
+ ├── modules/
+ │    ├── DragDrop/index.js        # DragDrop module for handling drag and drop events
+ ├── components/
+ │    ├── Card/index.js        # Card component for individual document cards
+ │    ├── ImageOverlay/index.js  # Component that handles full-screen image overlay
+ |    ├── Loader/index.js        # Component that handles loading
+ ├── data/
+ │    └── staticCards.js      # Static cards data for documents
+ ├── App.js                # Main application component
+ ├── index.js              # Entry point for React app
+ ├── index.css             # Application-wide styles
+public/
+ └── index.html            # HTML template
+README.md                  # Project documentation
+package.json               # NPM dependencies and scripts
+```
 
-### Advanced Configuration
+## Future Improvements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Dynamic Data**: The current implementation loads from a staticCards file. This can be updated to fetch data from an API for more dynamic content.
+- **Card Customization**: Add a feature that allows users to upload custom thumbnails for each document id.
+- **Reorder Persistence**: Currently, card reordering is only on the frontend. In the future, this could be saved to a backend so that the card order is persistent across sessions.
+- **Accessibility**: Improve keyboard navigation for drag-and-drop functionality and ensure screen reader support for better accessibility.
 
-### Deployment
+## Conclusion
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project demonstrates how to build a responsive card-based layout using React, manage loading states with spinners, and implement drag-and-drop functionality. The image overlay feature enhances user interaction, allowing users to view document thumbnails in detail.

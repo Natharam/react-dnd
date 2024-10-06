@@ -1,0 +1,20 @@
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Max 3 cards per row */
+  gap: 20px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Responsive Styles for Smaller Screens */
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row for medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .card-container {
+    grid-template-columns: repeat(1, 1fr); /* 1 card per row for small screens */
+  }
+}
