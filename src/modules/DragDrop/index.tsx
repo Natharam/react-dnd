@@ -6,29 +6,39 @@ import { mockFetchDocuments } from "../../mocks/moch-fetch";
 import Card from "../../components/Card";
 import "./style.css";
 
-const DragDropComponent = () => {
-  const [cards, setCards] = useState([]);
-  const [overlayImage, setOverlayImage] = useState(null);
+interface Document {
+  id: string;
+  title: string;
+  image: string;
+}
+
+const DragDropComponent: React.FC = () => {
+  const [cards, setCards] = useState<Document[]>([]);
+  const [overlayImage, setOverlayImage] = useState<string | null>(null);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    // Fetch documents from the mock API
-    const response = await mockFetchDocuments();
-    const docs = await response.json();
-    setCards(docs);
+    try {
+      // Fetch documents from the mock API
+      const response = await mockFetchDocuments();
+      const docs: Document[] = await response.json();
+      setCards(docs);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
   };
 
-  const moveCard = (fromIndex, toIndex) => {
+  const moveCard = (fromIndex: number, toIndex: number) => {
     const updatedCards = [...cards];
     const [movedCard] = updatedCards.splice(fromIndex, 1);
     updatedCards.splice(toIndex, 0, movedCard);
     setCards(updatedCards);
   };
 
-  const handleCardClick = (imageSrc) => {
+  const handleCardClick = (imageSrc: string) => {
     setOverlayImage(imageSrc);
   };
 
@@ -37,7 +47,7 @@ const DragDropComponent = () => {
   };
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         closeOverlay();
       }

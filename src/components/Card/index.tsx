@@ -3,8 +3,20 @@ import { useDrag, useDrop } from "react-dnd";
 import Loader from "../Loader";
 import "./style.css";
 
-const Card = ({ card, index, moveCard, onCardClick }) => {
-  const [loading, setLoading] = useState(true);
+interface CardType {
+  image: string;
+  title: string;
+}
+
+interface CardProps {
+  card: CardType;
+  index: number;
+  moveCard: (fromIndex: number, toIndex: number) => void;
+  onCardClick: (imageSrc: string) => void;
+}
+
+const Card: React.FC<CardProps> = ({ card, index, moveCard, onCardClick }) => {
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [{ isDragging }, drag] = useDrag({
     type: "CARD",
@@ -16,10 +28,10 @@ const Card = ({ card, index, moveCard, onCardClick }) => {
 
   const [, drop] = useDrop({
     accept: "CARD",
-    hover: (draggedItem) => {
+    hover: (draggedItem: { index: number }) => {
       if (draggedItem.index !== index) {
         moveCard(draggedItem.index, index);
-        draggedItem.index = index;
+        draggedItem.index = index; // Update the index of the dragged item
       }
     },
   });
